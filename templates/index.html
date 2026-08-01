@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PasteBin</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
+</head>
+
+<body>
+
+    <!-- ========================================= -->
+
+    <div class="background">
+
+        <span class="blob blob1"></span>
+
+        <span class="blob blob2"></span>
+
+        <span class="blob blob3"></span>
+
+    </div>
+
+    <!-- ========================================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-file-lines"></i>
+
+            <span>PasteBin</span>
+
+        </div>
+
+        <div class="nav-center">
+
+            <button class="nav-btn" id="homeBtn">
+
+                <i class="fa-solid fa-plus"></i>
+
+                New Paste
+
+            </button>
+
+            <button class="nav-btn" id="dashboardBtn">
+
+                <i class="fa-solid fa-folder"></i>
+
+                My Pastes
+
+            </button>
+
+        </div>
+
+        <div class="nav-right">
+
+            <button id="themeToggle">
+
+                <i class="fa-solid fa-moon"></i>
+
+            </button>
+
+        </div>
+
+    </nav>
+
+    <!-- ========================================= -->
+
+    <main class="app">
+
+        <!-- ========================================= -->
+
+        <!-- Home / Create Paste -->
+
+        <section id="createPage" class="page hidden">
+
+            <!-- Hero -->
+
+            <div class="hero">
+
+                <h1>Create a New Paste</h1>
+
+                <p>
+
+                    Share code, notes and text instantly. No account required.
+
+                </p>
+
+            </div>
+
+            <!-- Editor Card -->
+
+            <div class="glass editor-card">
+
+                <!-- Top Toolbar -->
+
+                <div class="toolbar">
+
+                    <div class="toolbar-left">
+
+                        <div class="input-group">
+
+                            <label for="pasteTitle">
+
+                                Title
+
+                            </label>
+
+                            <input type="text" id="pasteTitle" maxlength="100" placeholder="Untitled Paste">
+
+                        </div>
+
+                        <div class="input-group">
+
+                            <label>
+
+                                Language
+
+                            </label>
+
+                            <select id="language">
+
+                                <option value="text">Plain Text</option>
+
+                                <option value="python">Python</option>
+
+                                <option value="cpp">C++</option>
+
+                                <option value="c">C</option>
+
+                                <option value="java">Java</option>
+
+                                <option value="javascript">JavaScript</option>
+
+                                <option value="typescript">TypeScript</option>
+
+                                <option value="html">HTML</option>
+
+                                <option value="css">CSS</option>
+
+                                <option value="json">JSON</option>
+
+                                <option value="bash">Bash</option>
+
+                                <option value="sql">SQL</option>
+
+                                <option value="markdown">Markdown</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="input-group">
+
+                            <label>
+
+                                Expiration
+
+                            </label>
+
+                            <select id="expiry">
+
+                                <option value="never">
+
+                                    Never
+
+                                </option>
+
+                                <option value="10m">
+
+                                    10 Minutes
+
+                                </option>
+
+                                <option value="1h">
+
+                                    1 Hour
+
+                                </option>
+
+                                <option value="1d">
+
+                                    1 Day
+
+                                </option>
+
+                                <option value="1w">
+
+                                    1 Week
+
+                                </option>
+
+                                <option value="1m">
+
+                                    1 Month
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Editor -->
+
+                <div class="editor-wrapper">
+
+                    <textarea id="pasteContent" spellcheck="false" placeholder="Paste your code here..."></textarea>
+
+                </div>
+
+                <!-- Stats -->
+
+                <div class="editor-stats">
+
+                    <div class="stats-left">
+
+                        <span>
+
+                            Characters:
+
+                            <strong id="charCount">
+
+                                0
+
+                            </strong>
+
+                        </span>
+
+                        <span>
+
+                            Words:
+
+                            <strong id="wordCount">
+
+                                0
+
+                            </strong>
+
+                        </span>
+
+                        <span>
+
+                            Lines:
+
+                            <strong id="lineCount">
+
+                                1
+
+                            </strong>
+
+                        </span>
+
+                    </div>
+
+                    <div class="stats-right">
+
+                        <span id="saveStatus">
+
+                            Draft Saved
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <!-- Upload -->
+
+                <div id="dropZone" class="drop-zone">
+
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                    <h3>
+
+                        Drag & Drop a File
+
+                    </h3>
+
+                    <p>
+
+                        or
+
+                    </p>
+
+                    <button id="chooseFile" type="button">
+
+                        Choose File
+
+                    </button>
+
+                    <input type="file" id="fileInput" hidden>
+
+                </div>
+
+                <!-- Actions -->
+
+                <div class="editor-actions">
+
+                    <button id="clearBtn" class="secondary">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                        Clear
+
+                    </button>
+
+                    <button id="previewBtn" class="secondary">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                        Preview
+
+                    </button>
+
+                    <button id="downloadDraftBtn" class="secondary">
+
+                        <i class="fa-solid fa-download"></i>
+
+                        Download
+
+                    </button>
+
+                    <button id="createPasteBtn" class="primary">
+
+                        <i class="fa-solid fa-paper-plane"></i>
+
+                        Create Paste
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Recent Tips -->
+
+            <div class="glass tips-card">
+
+                <h2>
+
+                    Tips
+
+                </h2>
+
+                <ul>
+
+                    <li>
+
+                        Press
+
+                        <kbd>Ctrl</kbd> +
+
+                        <kbd>S</kbd>
+
+                        to create a paste quickly.
+
+                    </li>
+
+                    <li>
+
+                        Your draft is automatically saved in your browser.
+
+                    </li>
+
+                    <li>
+
+                        Anonymous authentication lets you manage your own pastes without creating an account.
+
+                    </li>
+
+                    <li>
+
+                        Large files are better uploaded using drag & drop.
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================= -->
+
+        <!-- View Paste -->
+
+        <section id="viewPage" class="page hidden">
+
+            <!-- Paste Header -->
+
+            <div class="glass paste-header-card">
+
+                <div class="paste-header-left">
+
+                    <h1 id="viewTitle">
+
+                        Untitled Paste
+
+                    </h1>
+
+                    <div class="paste-meta">
+
+                        <span>
+
+                            <i class="fa-solid fa-hashtag"></i>
+
+                            <span id="viewSlug">
+
+                                -
+
+                            </span>
+
+                        </span>
+
+                        <span>
+
+                            <i class="fa-solid fa-code"></i>
+
+                            <span id="viewLanguage">
+
+                                Plain Text
+
+                            </span>
+
+                        </span>
+
+                        <span>
+
+                            <i class="fa-regular fa-calendar"></i>
+
+                            <span id="viewCreated">
+
+                                -
+
+                            </span>
+
+                        </span>
+
+                        <span>
+
+                            <i class="fa-solid fa-clock"></i>
+
+                            <span id="viewExpiry">
+
+                                Never
+
+                            </span>
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="paste-header-right">
+
+                    <span id="ownerBadge" class="owner-badge hidden">
+
+                        <i class="fa-solid fa-crown"></i>
+
+                        Owner
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- Quick Stats -->
+
+            <div class="stats-grid">
+
+                <div class="glass stat-box">
+
+                    <h3 id="viewCharacters">
+
+                        0
+
+                    </h3>
+
+                    <p>
+
+                        Characters
+
+                    </p>
+
+                </div>
+
+                <div class="glass stat-box">
+
+                    <h3 id="viewWords">
+
+                        0
+
+                    </h3>
+
+                    <p>
+
+                        Words
+
+                    </p>
+
+                </div>
+
+                <div class="glass stat-box">
+
+                    <h3 id="viewLines">
+
+                        0
+
+                    </h3>
+
+                    <p>
+
+                        Lines
+
+                    </p>
+
+                </div>
+
+                <div class="glass stat-box">
+
+                    <h3 id="viewSize">
+
+                        0 KB
+
+                    </h3>
+
+                    <p>
+
+                        Size
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+
+            <div class="glass action-card">
+
+                <button id="copyPasteBtn" class="primary">
+
+                    <i class="fa-regular fa-copy"></i>
+
+                    Copy
+
+                </button>
+
+                <button id="copyLinkBtn">
+
+                    <i class="fa-solid fa-link"></i>
+
+                    Copy Link
+
+                </button>
+
+                <button id="downloadPasteBtn">
+
+                    <i class="fa-solid fa-download"></i>
+
+                    Download
+
+                </button>
+
+
+                <button id="shareBtn">
+
+                    <i class="fa-solid fa-share-nodes"></i>
+
+                    Share
+
+                </button>
+
+                <button id="deletePasteBtn" class="danger hidden">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete
+
+                </button>
+
+            </div>
+
+            <!-- URL -->
+
+            <div class="glass url-card">
+
+                <label>
+
+                    Public URL
+
+                </label>
+
+                <div class="url-box">
+
+                    <input id="pasteUrl" readonly>
+
+                    <button id="copyUrlBtn">
+
+                        Copy
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Code Viewer -->
+
+            <div class="glass code-card">
+
+                <div class="code-toolbar">
+
+                    <div>
+
+                        <span id="languageBadge">
+
+                            Plain Text
+
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <button id="fullscreenBtn">
+
+                            <i class="fa-solid fa-expand"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <pre id="codeContainer">
+
+<code id="codeBlock"></code>
+
+                </pre>
+
+            </div>
+
+            <!-- Information -->
+
+            <div class="info-grid">
+
+                <div class="glass">
+
+                    <h3>
+
+                        Information
+
+                    </h3>
+
+                    <table class="info-table">
+
+                        <tr>
+
+                            <td>Slug</td>
+
+                            <td id="infoSlug">-</td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Language</td>
+
+                            <td id="infoLanguage">
+
+                                -
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Created</td>
+
+                            <td id="infoCreated">
+
+                                -
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Expires</td>
+
+                            <td id="infoExpiry">
+
+                                Never
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Characters</td>
+
+                            <td id="infoChars">
+
+                                0
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td>Lines</td>
+
+                            <td id="infoLines">
+
+                                0
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <div class="glass">
+
+                    <h3>
+
+                        Shortcuts
+
+                    </h3>
+
+                    <ul class="shortcut-list">
+
+                        <li>
+
+                            Ctrl + C → Copy
+
+                        </li>
+
+                        <li>
+
+                            Ctrl + D → Download
+
+                        </li>
+
+                        <li>
+
+                            Ctrl + L → Copy Link
+
+                        </li>
+
+                        <li>
+
+                            F11 → Fullscreen
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================= -->
+
+        <!-- Dashboard -->
+
+        <section id="dashboardPage" class="page hidden">
+
+            <!-- Dashboard Header -->
+
+            <div class="dashboard-header">
+
+                <div>
+
+                    <h1>
+
+                        My Pastes
+
+                    </h1>
+
+                    <p>
+
+                        Manage all the pastes linked to your anonymous account.
+
+                    </p>
+
+                </div>
+
+                <button id="newPasteBtn" class="primary">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                    New Paste
+
+                </button>
+
+            </div>
+
+            <!-- Statistics -->
+
+            <div class="stats-grid">
+
+                <div class="glass stat-box">
+
+                    <h2 id="totalPastes">
+
+                        0
+
+                    </h2>
+
+                    <p>
+
+                        Total Pastes
+
+                    </p>
+
+                </div>
+
+                <div class="glass stat-box">
+
+                    <h2 id="activePastes">
+
+                        0
+
+                    </h2>
+
+                    <p>
+
+                        Active
+
+                    </p>
+
+                </div>
+
+                <div class="glass stat-box">
+
+                    <h2 id="expiredPastes">
+
+                        0
+
+                    </h2>
+
+                    <p>
+
+                        Expired
+
+                    </p>
+
+                </div>
+
+                <div class="glass stat-box">
+
+                    <h2 id="storageUsed">
+
+                        0 KB
+
+                    </h2>
+
+                    <p>
+
+                        Storage Used
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Search -->
+
+            <div class="glass dashboard-toolbar">
+
+                <div class="search-wrapper">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input id="searchInput" placeholder="Search by title, slug or language...">
+
+                </div>
+
+                <select id="sortSelect">
+
+                    <option value="newest">
+
+                        Newest
+
+                    </option>
+
+                    <option value="oldest">
+
+                        Oldest
+
+                    </option>
+
+                    <option value="title">
+
+                        Title
+
+                    </option>
+
+                    <option value="language">
+
+                        Language
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Paste Grid -->
+
+            <div id="pasteGrid" class="paste-grid">
+
+                <!-- Filled by JavaScript -->
+
+            </div>
+
+            <!-- Empty State -->
+
+            <div id="emptyDashboard" class="glass empty-state hidden">
+
+                <i class="fa-regular fa-folder-open"></i>
+
+                <h2>
+
+                    No Pastes Found
+
+                </h2>
+
+                <p>
+
+                    Create your first paste to see it here.
+
+                </p>
+
+                <button id="createFirstPasteBtn" class="primary">
+
+                    Create Paste
+
+                </button>
+
+            </div>
+
+            <!-- Card Template -->
+
+            <template id="pasteCardTemplate">
+
+                <div class="glass paste-card">
+
+                    <div class="paste-card-top">
+
+                        <div>
+
+                            <h3 class="card-title">
+
+                            </h3>
+
+                            <span class="card-slug">
+
+                            </span>
+
+                        </div>
+
+                        <span class="language-pill">
+
+                        </span>
+
+                    </div>
+
+                    <div class="card-meta">
+
+                        <span class="created-date">
+
+                        </span>
+
+                        <span class="expiry-date">
+
+                        </span>
+
+                    </div>
+
+                    <div class="card-footer">
+
+                    </div>
+
+                    <div class="card-actions">
+
+                        <button class="viewBtn">
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </button>
+
+                        <button class="copyBtn">
+
+                            <i class="fa-regular fa-copy"></i>
+
+                        </button>
+
+                        <button class="shareBtn">
+
+                            <i class="fa-solid fa-share"></i>
+
+                        </button>
+
+                        <button class="downloadBtn">
+
+                            <i class="fa-solid fa-download"></i>
+
+                        </button>
+
+                        <button class="deleteBtn danger">
+
+                            <i class="fa-solid fa-trash"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </template>
+
+            <!-- Pagination -->
+
+            <div id="pagination" class="pagination">
+
+                <button id="prevPage">
+
+                    Previous
+
+                </button>
+
+                <span id="pageInfo">
+
+                    Page 1
+
+                </span>
+
+                <button id="nextPage">
+
+                    Next
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================= -->
+
+        <!-- 404 -->
+
+        <section id="notFoundPage" class="page hidden">
+
+            <div class="glass" style="padding:60px 40px;text-align:center;">
+
+                <h1 style="font-size:4rem;color:var(--primary);">
+
+                    404
+
+                </h1>
+
+                <p style="font-size:1.2rem;margin:20px 0;">
+
+                    Paste not found.
+
+                </p>
+
+                <button id="goHomeBtn" class="primary">
+
+                    Create New Paste
+
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================= -->
+        <!-- Global Toast -->
+        <!-- ========================================= -->
+
+        <div id="toast" class="toast hidden">
+
+            <div class="toast-icon">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+            </div>
+
+            <div class="toast-content">
+
+                <h4 id="toastTitle">
+
+                    Success
+
+                </h4>
+
+                <p id="toastMessage">
+
+                    Operation completed successfully.
+
+                </p>
+
+            </div>
+
+            <button id="toastClose">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <!-- ========================================= -->
+        <!-- Global Loading Overlay -->
+        <!-- ========================================= -->
+
+        <div id="loadingOverlay" class="overlay hidden">
+
+            <div class="glass loading-box">
+
+                <div class="loader"></div>
+
+                <h2>
+
+                    Please Wait...
+
+                </h2>
+
+                <p id="loadingText">
+
+                    Processing request...
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- ========================================= -->
+        <!-- Delete Modal -->
+        <!-- ========================================= -->
+
+        <div id="deleteModal" class="modal hidden">
+
+            <div class="glass modal-box">
+
+                <i class="fa-solid fa-triangle-exclamation warning-icon"></i>
+
+                <h2>
+
+                    Delete Paste?
+
+                </h2>
+
+                <p>
+
+                    This action cannot be undone.
+
+                </p>
+
+                <div class="modal-actions">
+
+                    <button id="cancelDelete">
+
+                        Cancel
+
+                    </button>
+
+                    <button id="confirmDelete" class="danger">
+
+                        Delete
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================================= -->
+        <!-- Share Modal -->
+        <!-- ========================================= -->
+
+        <div id="shareModal" class="modal hidden">
+
+            <div class="glass modal-box">
+
+                <h2>
+
+                    Share Paste
+
+                </h2>
+
+                <p>
+
+                    Anyone with this link can access this paste.
+
+                </p>
+
+                <div class="share-box">
+
+                    <input id="shareLink" readonly>
+
+                    <button id="copyShareLink">
+
+                        Copy
+
+                    </button>
+
+                </div>
+
+                <div class="modal-actions">
+
+                    <button id="closeShare">
+
+                        Close
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================================= -->
+        <!-- Preview Modal -->
+        <!-- ========================================= -->
+
+        <div id="previewModal" class="modal hidden">
+
+            <div class="glass modal-box" style="max-width:700px;">
+
+                <h2 style="margin-bottom:8px;">
+
+                    Preview
+
+                </h2>
+
+                <p style="margin-bottom:16px;">
+
+                    <span id="previewLanguage" style="color:var(--primary);font-weight:600;">text</span>
+
+                </p>
+
+                <pre id="previewContainer" style="background:rgba(0,0,0,.25);border-radius:14px;padding:20px;max-height:500px;overflow:auto;font-family:'JetBrains Mono',Consolas,monospace;font-size:14px;line-height:1.8;white-space:pre-wrap;word-break:break-word;color:var(--text);"></pre>
+
+                <div class="modal-actions">
+
+                    <button id="closePreview">
+
+                        Close
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ========================================= -->
+        <!-- Keyboard Shortcuts -->
+        <!-- ========================================= -->
+
+        <div id="shortcutModal" class="modal hidden">
+
+            <div class="glass modal-box">
+
+                <h2>
+
+                    Keyboard Shortcuts
+
+                </h2>
+
+                <table class="shortcut-table">
+
+                    <tr>
+
+                        <td>Ctrl + S</td>
+
+                        <td>Create Paste</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Ctrl + C</td>
+
+                        <td>Copy Paste</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Ctrl + D</td>
+
+                        <td>Download</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Ctrl + L</td>
+
+                        <td>Copy Link</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Esc</td>
+
+                        <td>Close Modal</td>
+
+                    </tr>
+
+                </table>
+
+                <div class="modal-actions">
+
+                    <button id="closeShortcut">
+
+                        Close
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ========================================= -->
+    <!-- Footer -->
+    <!-- ========================================= -->
+
+    <footer>
+
+        <div class="footer-left">
+
+            <i class="fa-solid fa-file-lines"></i>
+
+            PasteBin
+
+        </div>
+
+        <div class="footer-center">
+
+            Anonymous • Fast • Secure
+
+        </div>
+
+        <div class="footer-right">
+
+            Built with Flask ❤️
+
+        </div>
+
+    </footer>
+
+    <!-- ========================================= -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+
+</html>
